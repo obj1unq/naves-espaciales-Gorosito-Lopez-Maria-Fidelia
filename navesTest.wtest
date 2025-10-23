@@ -84,3 +84,61 @@ describe "Nave de combate" {
 		assert.equals("Enemigo encontrado", naveEnAtaque.ultimoMensaje())
 	}
 }
+
+
+describe "nave sin velocidad tras propulsar" {
+  test "indica si la velocidad de 0 post propulsar da 20000" {
+	const nave = new NaveDeCarga()
+	nave.propulsar()
+	assert.equals(20000, nave.velocidad())
+  }
+}
+
+describe "test 2" {
+  test "nave que transporta 5000 residuos radiactivos" {
+	const nave =  new NaveDeResiduosRadiactivos()
+	nave.carga(5000)
+	nave.recibirAmenaza()
+	assert.equals(5000, nave.carga())
+	assert.equals(0, nave.velocidad())
+  }
+}
+
+
+describe "Nave preparadas" {
+  test "en una nave a 290 usar prepararse para que velocidad quede en 300" {
+	const nave = new NaveDePasajeros()
+	nave.velocidad(290000)
+	nave.preparar()
+	assert.equals(300000, nave.velocidad())
+  }
+  test "nave de resiudos sin velocidad no sellada, preparse, queda a velocidad 15 y sellada" {
+	const nave = new NaveDeResiduosRadiactivos()
+	nave.preparar()
+	assert.equals(15000, nave.velocidad())
+	assert.that(nave.estaCerradaAlVacio())
+  }
+  test "nave de combate en ataque sin velocidad prepararse emite mensaje y 15 velocidad " {
+	const nave = new NaveDeCombate()
+	nave.modo(ataque)
+	nave.preparar()
+	assert.equals("Volviendo a la base", nave.ultimoMensaje())
+	assert.equals(15000, nave.velocidad())
+  }
+  test "nave de combate en reposo sin velocidad se prepara emite saliendo, queda en modo ataque y con velocidad 15" {
+	const nave = new NaveDeCombate()
+	nave.modo(reposo)
+	nave.preparar()
+	assert.equals("Saliendo en mision", nave.ultimoMensaje())
+	assert.equals(15000, nave.velocidad())
+	assert.that(nave.modo().invisible()) // si esta invisible entonces esta en ataque
+  }
+  test "nave de pasajeros sin velocidad se encuentra con enemigo, queda en 20 y alarma activa" {
+	const nave = new NaveDePasajeros()
+	nave.sufrirAtaque()
+	assert.equals(20000, nave.velocidad())
+	assert.that(nave.alarma())
+  }
+
+}
+
